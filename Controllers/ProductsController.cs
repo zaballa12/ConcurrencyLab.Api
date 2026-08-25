@@ -1,6 +1,7 @@
 using ConcurrencyLab.Api.Data;
 using ConcurrencyLab.Api.DTOs;
 using ConcurrencyLab.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     // returns all products
     public async Task<ActionResult<List<Product>>> GetAll()
     {
@@ -29,6 +31,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize(Roles = "Admin")]
     // deletes all products
     public async Task<IActionResult> DeleteAll()
     {
@@ -38,6 +41,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     // creates a new product
     public async Task<ActionResult<Product>> Create(CreateProductRequest request)
     {
@@ -65,6 +69,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [AllowAnonymous]
     // returns a product by its ID
     public async Task<ActionResult<Product>> GetById(int id)
     {
@@ -79,6 +84,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("{id:int}/stock")]
+    [Authorize(Roles = "Admin,Operator")]
     // adds stock to a product
     public async Task<ActionResult<Product>> AddStock(int id, AddStockRequest request)
     {
@@ -103,6 +109,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("{id:int}/reserve-naive")]
+    [Authorize(Roles = "Admin,Operator")]
     // reserves stock for a product without handling concurrency issues
     public async Task<ActionResult<Product>> ReserveStockNaive(int id, ReserveStockRequest request)
     {
@@ -135,6 +142,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("{id:int}/reserve")]
+    [Authorize(Roles = "Admin,Operator")]
     // reserves stock for a product with concurrency handling
     public async Task<ActionResult<Product>> ReserveStock(int id, ReserveStockRequest request)
     {
