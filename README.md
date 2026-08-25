@@ -12,7 +12,7 @@ public Guid Version { get; set; }
 
 Esse campo foi configurado como concurrency token no EF Core. Assim, quando o produto é atualizado, o EF compara a versão que foi lida no início da requisição com a versão atual da linha no banco. Se outra requisicao ja tiver salvo antes, essa versao nao bate mais, o `SaveChangesAsync()` falha com `DbUpdateConcurrencyException` e a API responde `409 Conflict`.
 
-O projeto manteve dois endpoints de reserva:
+O projeto manteve dois endpoints de reserva de estoque:
 
 - `POST /products/{id}/reserve-naive`
 - `POST /products/{id}/reserve`
