@@ -4,7 +4,7 @@ Pequena API em ASP.NET Core para estudar concorrência (operações de estoque c
 
 A ideia do projeto é mostrar um problema bem comum: duas requisições tentando alterar o mesmo produto ao mesmo tempo. Em uma implementação ingênua, isso pode gerar sobrescrita silenciosa de dados e deixar o estoque final diferente do esperado.
 
-Neste projeto, a correcao foi feita com optimistic concurrency usando o campo `Version` na entidade `Product`.
+Neste projeto, a correção foi feita com concorrência otimista usando o campo `Version` na entidade `Product`.
 
 ```csharp
 public Guid Version { get; set; }
@@ -18,3 +18,9 @@ O projeto manteve dois endpoints de reserva de estoque:
 - `POST /products/{id}/reserve`
 
 O primeiro existe como demonstração do problema. O segundo mostra a abordagem corrigida usando `Version` para detectar conflito entre atualizações concorrentes.
+
+## Concorrência otimista e pessimista
+
+Na concorrência otimista, o registro não é bloqueado durante a operação. Ao salvar, o sistema verifica se ele ainda está na mesma versão que foi lida. Se outra requisição o alterou antes, o conflito é detectado e a operação falha.
+
+Na concorrência pessimista, o registro é bloqueado antes da alteração. Outras requisições precisam esperar o fim da transação para acessá-lo, evitando modificações simultâneas, mas aumentando a possibilidade de espera e deadlocks.
